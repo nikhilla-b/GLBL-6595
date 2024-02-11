@@ -50,6 +50,12 @@ structural_change_transform |>
   select(c(Total_VA_Q15, Total_EMP)) |>
   mutate(total_per_worker = Total_VA_Q15/Total_EMP)
 
+# the reason for this discrepancy might be because the World Bank only takes into account
+# trade-able goods in markets
+# However, a lot of agricultural, home produced or locally owned production might
+# not be counted in that, which in turn might underestimate the total value
+# added per workers in the country
+
 # Question 2 ---------------------
 structure_2015 <- structural_change_transform |>
   filter(year == 2015) 
@@ -76,6 +82,9 @@ sector_standardized <- sector_labor_product - 3068.131
 
 # naming the standardized values
 names(sector_standardized) <- sectors
+
+# Normalized productivity of agriculture is -1983.73
+# Employment share of agriculture is 43.2% (code for this in question 4)
 
 
 # Question 3 ---------------------
@@ -134,6 +143,12 @@ structure_2015_long |>
   labs(y = "Labor Productivity Relative to Total Labor Productivtiy \n (Per Capita)", 
        x = "Cummulative employment")
 
+# This figure shows us that the least productive sector, Agriculture, actually had the largest
+# labor force share in Bangladesh in 2015.
+# On the other hand, extremely productive sectors, such as Real Estate, Mining,
+# Finance, and Business have minuscule shares of the labor force
+# The combination of these phenomenons can drag down the overall labor productivity
+
 
 # Question 4 ---------------------
 # naming the non standardized values
@@ -150,7 +165,22 @@ structure_2015_long <- structure_2015_long |>
          weighted_sector_prod = Sector_prod_non_stand*Employment_share)
 
 # weighted sum of productivity of sectors
-sum(structure_2015_long$weighted_sector_prod)
+weighted_prod <- sum(structure_2015_long$weighted_sector_prod)
+
+# flipping employment shares of manufacturing and agriculture
+# first getting the values
+agriculture_share <- structure_2015_long$Employment_share[1]
+manufacturing_share <- structure_2015_long$Employment_share[3]
+
+# now flipping
+structure_2015_long$Employment_share[1] <- manufacturing_share
+structure_2015_long$Employment_share[3] <- agriculture_share
+
+# calculating the new weighted labor productivity
+flipped_prod <- sum(structure_2015_long$Sector_prod_non_stand*structure_2015_long$Employment_share)
+
+# percentage increase
+percent_increase <- ((flipped_prod - weighted_prod)/weighted_prod) * 100
 
 
 
