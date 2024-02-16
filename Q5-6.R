@@ -185,11 +185,11 @@ percent_increase <- ((flipped_prod - weighted_prod)/weighted_prod) * 100
 #Question 5:
 
 structural_change_bangladesh <- structural_change |>
-  filter((var == "VA" | var == "EMP") & country == "Bangladesh")
+  filter((var == "VA_Q15" | var == "EMP") & country == "Bangladesh")
 
 # Find the rows where value added (VA) and employment (EMP) data start and end
-va_start <- which(structural_change_bangladesh$var == "VA")[1] 
-va_end <- which(structural_change_bangladesh$var == "VA")[length(which(structural_change_bangladesh$var == "VA"))] 
+va_start <- which(structural_change_bangladesh$var == "VA_Q15")[1] 
+va_end <- which(structural_change_bangladesh$var == "VA_Q15")[length(which(structural_change_bangladesh$var == "VA_Q15"))] 
 emp_start <- which(structural_change_bangladesh$var == "EMP")[1] 
 emp_end <- which(structural_change_bangladesh$var == "EMP")[length(which(structural_change_bangladesh$var == "EMP"))] 
 
@@ -250,23 +250,130 @@ ggplot(data = graph_data, aes(x = Years, y = cv_values)) +
 
 #Question 6:
 #________________
+# using transformed data
+structural_change_bangladesh <- structural_change_transform |>
+  filter(year == 1990 | year == 2005 | year == 2018)
 
 #Aggregating Sectors:
-structural_change_bangladesh$mfg <- structural_change_bangladesh$Manufacturing +
-  structural_change_bangladesh$Mining + structural_change_bangladesh$Utilities
+structural_change_bangladesh <- structural_change_bangladesh |>
+  mutate(mfg_va = Mining_VA_Q15 + Manufacturing_VA_Q15 + Utilities_VA_Q15,
+         services_va = Construction_VA_Q15 + Trade_VA_Q15 + Transport_VA_Q15 + 
+           Business_VA_Q15 + Finance_VA_Q15 + Realestate_VA_Q15 + Government_VA_Q15 +
+           Other_VA_Q15,
+         mfg_emp = Mining_EMP + Manufacturing_EMP + Utilities_EMP,
+         services_emp = Construction_EMP + Trade_EMP + Transport_EMP + Business_EMP +
+           Finance_EMP + Realestate_EMP + Government_EMP + Other_EMP)
 
-structural_change_bangladesh$services <- structural_change_bangladesh$Construction +
-  structural_change_bangladesh$Trade + structural_change_bangladesh$Transport +
-  structural_change_bangladesh$Business + structural_change_bangladesh$Finance +
-  structural_change_bangladesh$Realestate + 
-  structural_change_bangladesh$Government + structural_change_bangladesh$Other
 
 #Creating New Dataframe for further Questions:
-productivity_decomp <- select(structural_change_bangladesh, year, Agriculture, mfg, 
-                              services)
+productivity_decomp <- structural_change_bangladesh |>
+  select(year, Agriculture_VA_Q15, Agriculture_EMP, mfg_va, mfg_emp,
+         services_va, services_emp)
 
 productivity_decomp$year <- as.numeric(productivity_decomp$year)
 productivity_decomp <- productivity_decomp |>
-  filter((year == "1990" | year == "2005" | year == "2018"))
+  filter((year == "1990" | year == "2005" | year == "2018")) 
+
+#productivity_decomp$VAR <- c(rep("VA", 3), rep("EMP", 3))
 
 
+# Q7 ----------------------------------------------------------------------
+
+#Making a data frame in a format convenient to do calculations
+sector <- c("Agriculture", "Agriculture", "Agriculture", "Manufacturing","Manufacturing", "Manufacturing", "Services", "Services", "Services")
+year <- c("1990", "2005", "2018","1990", "2005", "2018","1990", "2005", "2018")
+emp <- c("26836213", "22984794", "25808861", "5289198", "5051255", "9735080", "8690267", "18437495", "29222352")
+va <- c("12232852827", "18822526115", "30887840910", "5682913328", "16003341476", "51965884144", "31048064719", "65661485604", "142898353083")
+df <- data.frame(sector, year, emp, va)
+
+df$year <- as.character(df$year)
+df$emp <- as.numeric(df$emp)
+df$va <- as.numeric(df$va)
+
+#Mutating necessary variables for calculations
+df <- df |> 
+  mutate(lp = va/emp)
+
+df <- df |> 
+  group_by(year) |> 
+  mutate(L = sum(emp),
+         emp_share = emp/L,
+         )
+
+df <- df |> 
+  group_by(year) |> 
+  mutate(VA = sum(va),
+         LP = VA/L)
+
+#For 1990-2005 across and within productivity decomposition
+
+df_1 <- df |> 
+  filter(year == "1990" |year == "2005") |>
+  group_by(sector) |> 
+  mutate(del_lp = case_when(year == "2005" ~ lp - lag(lp), TRUE ~ 0),
+         del_LP = case_when(year == "2005" ~ LP - lag(LP), TRUE ~ 0),
+         del_emp_share = case_when(year == "2005" ~ emp_share - lag(emp_share), TRUE ~ 0))
+
+#within
+
+df_1 <- df_1 |> 
+  group_by(sector) |> 
+  mutate(product = case_when(year == "2005" ~ lag(emp_share)*del_lp, TRUE ~ 0)) |> 
+  ungroup() |> 
+  mutate(numerator = sum(product),
+         within = numerator/del_LP)
+
+#Question 8 - within sector decomposition
+
+df_1 <- df_1 |> 
+  group_by(sector) |> 
+  mutate(within_sec_decomp = product/del_LP)
+
+#across 
+
+df_1 <- df_1 |> 
+  group_by(sector, year) |> 
+  mutate(product_2 = del_emp_share*lp) |> 
+  ungroup() |> 
+  mutate(numerator_2 = sum(product_2),
+         across = numerator_2/del_LP)
+
+
+#For 2005-2018 across and within productivity decomposition
+
+df_2 <- df |> 
+  filter(year == "2005" |year == "2018") |>
+  group_by(sector) |> 
+  mutate(del_lp = case_when(year == "2018" ~ lp - lag(lp), TRUE ~ 0),
+         del_LP = case_when(year == "2018" ~ LP - lag(LP), TRUE ~ 0),
+         del_emp_share = case_when(year == "2018" ~ emp_share - lag(emp_share), TRUE ~ 0))
+
+#within
+
+df_2 <- df_2 |> 
+  group_by(sector) |> 
+  mutate(product = case_when(year == "2018" ~ lag(emp_share)*del_lp, TRUE ~ 0)) |> 
+  ungroup() |> 
+  mutate(numerator = sum(product),
+         within = numerator/del_LP)
+
+#Question 8 - within sector decomposition
+
+df_2 <- df_2 |> 
+  group_by(sector) |> 
+  mutate(within_sec_decomp = product/del_LP)
+
+#across 
+
+df_2 <- df_2 |> 
+  group_by(sector, year) |> 
+  mutate(product_2 = del_emp_share*lp) |> 
+  ungroup() |> 
+  mutate(numerator_2 = sum(product_2),
+         across = numerator_2/del_LP)
+
+#Time Series Graph for employment share
+
+ggplot(data = df, aes(x = year, y = emp_share, group = sector)) +
+  geom_line(aes(color = sector)) +
+  labs(title = "Employment share in Bangladesh")
