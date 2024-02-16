@@ -181,6 +181,9 @@ flipped_prod <- sum(structure_2015_long$Sector_prod_non_stand*structure_2015_lon
 # percentage increase
 percent_increase <- ((flipped_prod - weighted_prod)/weighted_prod) * 100
 
+# The percentage increase after flipping productivity of agriculture and manufacturing is 
+# 22.5% (from 3068.131 to 3759.322)
+
 
 #Question 5:
 
