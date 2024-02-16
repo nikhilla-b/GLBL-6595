@@ -325,6 +325,9 @@ df_1 <- df_1 |>
   mutate(numerator = sum(product),
          within = numerator/del_LP)
 
+#Interpretation
+#
+
 #Question 8 - within sector decomposition
 
 df_1 <- df_1 |> 
@@ -379,3 +382,16 @@ df_2 <- df_2 |>
 ggplot(data = df, aes(x = year, y = emp_share, group = sector)) +
   geom_line(aes(color = sector)) +
   labs(title = "Employment share in Bangladesh")
+
+#Question 9 --------------------------------
+
+#We reserve judgement for Bangladesh's prospects from these findings 
+#of their path of structural development. Like the methodology in 
+#Fan et al, we would be optimistic for Bangladesh if the growth
+#in the services sector stemmed from producitivty growth and not demand.
+#This would mean that sustained growth for Bangladesh is a possibility. Since
+#we do not have this available, we reserve our judgement, but are 
+#cautiously optimistic.
+#Intuitively, because Bangladesh has not increased its share of employment
+#in manufacturing, that is also cause for concern since virtually all rich
+#nations today went through a manufacturing phase before tertirisation.
