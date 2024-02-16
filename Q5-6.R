@@ -247,6 +247,9 @@ ggplot(data = graph_data, aes(x = Years, y = cv_values)) +
 #sectors, creating increased GDP
 #This would mean the nation looks more like advanced countries from our previous
 #lecture, with less variation in sector productivity, than LIC's
+#This could be the result of less productive sectors in 1990s becoming close to high productivity sectors. 
+#Since more people are leaving agricultural and other low productivity sectors and entering others, this gap has been reducing
+#It could also because of transfer of agricultural technology to LMICs
 
 #Question 6:
 #________________
@@ -357,6 +360,15 @@ df_2 <- df_2 |>
   mutate(numerator = sum(product),
          within = numerator/del_LP)
 
+#Between 1990 and 2005, about 47% of productivity decomposition comes from across sector labor reallocation. 
+#And this illustrates the structural change narrative for Bangladesh going from being agriculture sector dependent to aligning towards services. 
+#Whereas 52% of productivity decomposition comes from within sector reallocation accounted for by productivity growth. This could be due to emergence and advancements in 
+#the ready made garment industry. 
+
+#In 2005 to 2018  timeframe, 71% of the decomposition is accounted for by within sector productivity growth. This possibly could be due to improvements in the services sector. 
+#This accompanied by structural change towards service sector (28%) could be Bangladesh's structural change story. 
+
+
 #Question 8 - within sector decomposition
 
 df_2 <- df_2 |> 
@@ -377,3 +389,7 @@ df_2 <- df_2 |>
 ggplot(data = df, aes(x = year, y = emp_share, group = sector)) +
   geom_line(aes(color = sector)) +
   labs(title = "Employment share in Bangladesh")
+
+#Within sector decomposition further helps us reconfirm that most of the productivity growth between 1990s and 2005 occured in the manufacturing sector. With service sector accounting for least.
+#On the other hand, between 2005 and 2018, service sector accounted for most of the productivity growth and only 14% by agriculture. 
+
