@@ -386,12 +386,21 @@ ggplot(data = df, aes(x = year, y = emp_share, group = sector)) +
 #Question 9 --------------------------------
 
 #We reserve judgement for Bangladesh's prospects from these findings 
+<<<<<<< HEAD
 #of their path of structural development. Like the methodology in 
 #Fan et al, we would be optimistic for Bangladesh if the growth
 #in the services sector stemmed from productivity growth and not demand.
 #This would mean that sustained growth for Bangladesh is a possibility. Since
 #we do not have this available, we reserve our judgement, but are 
 #cautiously optimistic.
+=======
+#of their path of structural development going from agriculture 
+#to services. Like the methodology in Fan et al, we would be optimistic 
+#for Bangladesh if the growth in the services sector stemmed from 
+#producitivty growth and not demand.This would mean that sustained 
+#growth for Bangladesh is a possibility. Since we do not have this
+#available, we reserve our judgement, but are cautiously optimistic.
+>>>>>>> 821b9512fc55b4c86ca4b54bae8d15bc35968599
 #Intuitively, because Bangladesh has not increased its share of employment
 #in manufacturing, that is also cause for concern since virtually all rich
 #nations today went through a manufacturing phase before tertirisation.
