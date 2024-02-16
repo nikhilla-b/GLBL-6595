@@ -364,7 +364,7 @@ df_2 <- df_2 |>
          within = numerator/del_LP)
 
 #Between 1990 and 2005, about 47% of productivity decomposition comes from across sector labor reallocation. 
-#And this illustrates the structural change narrative for Bangladesh going from being agriculture sector dependent to aligning towards services. 
+#And this illustrates the structural change narrative for Bangladesh going from being agriculture sector dependent to aligning towards manufacturing. 
 #Whereas 52% of productivity decomposition comes from within sector reallocation accounted for by productivity growth. This could be due to emergence and advancements in 
 #the ready made garment industry. 
 
@@ -393,7 +393,7 @@ ggplot(data = df, aes(x = year, y = emp_share, group = sector)) +
   geom_line(aes(color = sector)) +
   labs(title = "Employment share in Bangladesh")
 
-#Within sector decomposition further helps us reconfirm that most of the productivity growth between 1990s and 2005 occured in the manufacturing sector. With service sector accounting for least.
+#Within sector decomposition further helps us confirm that most of the productivity growth between 1990s and 2005 occured in the manufacturing sector. With service sector accounting for least.
 #On the other hand, between 2005 and 2018, service sector accounted for most of the productivity growth and only 14% by agriculture. 
 
 
