@@ -322,6 +322,9 @@ df_1 <- df_1 |>
   mutate(numerator = sum(product),
          within = numerator/del_LP)
 
+#Interpretation
+#
+
 #Question 8 - within sector decomposition
 
 df_1 <- df_1 |> 
@@ -376,3 +379,6 @@ df_2 <- df_2 |>
 ggplot(data = df, aes(x = year, y = emp_share, group = sector)) +
   geom_line(aes(color = sector)) +
   labs(title = "Employment share in Bangladesh")
+
+#Interpretation
+#
