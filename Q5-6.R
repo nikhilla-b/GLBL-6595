@@ -395,7 +395,9 @@ ggplot(data = df, aes(x = year, y = emp_share, group = sector)) +
 
 #Within sector decomposition further helps us confirm that most of the productivity growth between 1990s and 2005 occured in the manufacturing sector. With service sector accounting for least.
 #On the other hand, between 2005 and 2018, service sector accounted for most of the productivity growth and only 14% by agriculture. 
-
+#It can also be noted from the graph that employment share in agriculture sector falls sharply 2005 onwards.
+#But this is accompanied by a balanced increase in employment share in service sector.
+#It can also be noted that manufacturing while not accounting for a major share in employment, still does increase between 2005 and 2018.
 
 
 #Question 9 --------------------------------
