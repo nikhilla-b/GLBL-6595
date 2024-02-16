@@ -238,15 +238,14 @@ ggplot(data = graph_data, aes(x = Years, y = cv_values)) +
   labs(title = "Scatterplot of CV Values Over Time", x = "Year", y = "CV Value")
 
 #Interpretation:
-# less variation in each sectors productivity, each sector was more 
-# stable in its output
-#There has been reduced variability in the sectors overall, allowing a 
-# stable environment for work to thrive
-#Since variation in labour productivity in catching up to mean productivity,
-#this could mean that the less productive sectors are catching up to the other
-#sectors, creating increased GDP
-#This would mean the nation looks more like advanced countries from our previous
-#lecture, with less variation in sector productivity, than LIC's
+#Since variation in labour productivity in catching up to mean productivity 
+#over time, this could mean that the less productive sectors are catching 
+#up to the other sectors. This is a result of less variation in each sector's
+#productivity, resulting in more stable output. This stable environment
+#should allow progress.
+#This could mean that Bangladesh looks more like advanced countries
+#from our previous lectures than other LIC's, due to this reduced
+#variation in sector productivity
 
 #Question 6:
 #________________
