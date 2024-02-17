@@ -55,7 +55,7 @@ structural_change_transform <- structural_change |>
 ## Question 1
 One potential explanation for this difference could stem from the World Bank's focus solely on trade-able goods within markets. As a result, numerous agricultural, locally-produced, or community-owned items may not be included in their calculations, potentially leading to an underestimation of the overall value.
 
-```{r}
+```{r, echo = FALSE}
 # total value added per worker in 2015
 structural_change_transform |>
   filter(year == 2015) |>
@@ -65,7 +65,7 @@ structural_change_transform |>
 ## Question 2
 The Normalized productivity of agriculture is -1983.73, while the employment share of agriculture is 43.2% (as of 2015)
 
-```{r}
+```{r, echo = FALSE}
 structure_2015 <- structural_change_transform |>
   filter(year == 2015) 
 
@@ -94,7 +94,7 @@ names(sector_standardized) <- sectors
 ```
 
 ## Question 3
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, echo = FALSE}
 # Loop through sectors to get employment
 
 #total employment in 2015
@@ -155,7 +155,7 @@ This data illustrates an intriguing trend: despite being the least productive se
 
 ## Question 4
 The percentage increase after flipping productivity of agriculture and manufacturing is 22.5% (from 3068.131 to 3759.322)
-``` {r}
+``` {r, echo = FALSE}
 # naming the non standardized values
 # naming the standardized values
 names(sector_labor_product) <- sectors
@@ -189,7 +189,7 @@ percent_increase <- ((flipped_prod - weighted_prod)/weighted_prod) * 100
 ```
 
 ## Question 5
-``` {r}
+``` {r, echo = FALSE}
 structural_change_bangladesh <- structural_change |>
   filter((var == "VA_Q15" | var == "EMP") & country == "Bangladesh")
 
@@ -248,7 +248,7 @@ As labor productivity across sectors converges towards the mean over time, it su
 
 
 ## Question 6
-```{r}
+```{r, echo = FALSE}
 # using transformed data
 structural_change_bangladesh <- structural_change_transform |>
   filter(year == 1990 | year == 2005 | year == 2018)
@@ -280,7 +280,7 @@ productivity_decomp
 Between 1990 and 2005, approximately 47% of productivity decomposition stemmed from inter-sector labor reallocation, illustrating Bangladesh's shift away from agriculture dependency towards manufacturing. Conversely, 52% of the productivity decomposition during this period originated from intra-sector reallocation, likely influenced by advancements in the ready-made garment industry.
 
 In the timeframe from 2005 to 2018, 71% of the productivity decomposition was attributed to within-sector productivity growth, possibly reflecting enhancements in the services sector. This shift, accompanied by a structural change towards the service sector (28%), may encapsulate Bangladesh's narrative of structural transformation.
-``` {r}
+``` {r, echo = FALSE}
 #Making a data frame in a format convenient to do calculations
 sector <- c("Agriculture", "Agriculture", "Agriculture", "Manufacturing","Manufacturing", "Manufacturing", "Services", "Services", "Services")
 year <- c("1990", "2005", "2018","1990", "2005", "2018","1990", "2005", "2018")
@@ -365,7 +365,7 @@ df_2
 
 
 ## Question 8
-``` {r}
+``` {r, echo = FALSE}
 df_2 <- df_2 |> 
   group_by(sector) |> 
   mutate(within_sec_decomp = product/del_LP)
