@@ -50,7 +50,6 @@ structural_change_transform <- structural_change |>
                                                 Warflag)) |>
   mutate(across(ends_with("VA_Q15"), ~ (.x * 1000000 /80))) |>
   mutate(across(ends_with("EMP"), ~ .x * 1000))
-
 ```
 
 ## Question 1
