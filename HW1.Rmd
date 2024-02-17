@@ -189,7 +189,7 @@ percent_increase <- ((flipped_prod - weighted_prod)/weighted_prod) * 100
 ```
 
 ## Question 5
-``` {r, echo = FALSE}
+```{undefined message=FALSE, warning=FALSE}
 structural_change_bangladesh <- structural_change |>
   filter((var == "VA_Q15" | var == "EMP") & country == "Bangladesh")
 
