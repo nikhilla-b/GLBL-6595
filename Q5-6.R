@@ -393,6 +393,3 @@ ggplot(data = df, aes(x = year, y = emp_share, group = sector)) +
 #we do not have this particular model applied to Bangladesh, we reserve our judgement, but are 
 #cautiously optimistic of their path of structural development going from agriculture 
 #to services. 
-#Intuitively, because Bangladesh has not increased its share of employment
-#in manufacturing, that is also cause for concern since virtually all rich
-#nations today went through a manufacturing phase before tertirisation.

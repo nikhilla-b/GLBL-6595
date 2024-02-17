@@ -1,0 +1,70 @@
+---
+title: "HW1 - Structural Transformation"
+author: "Nikhilla B, Ezeriki Emetonjor, Alistair Pyle,"
+date: "2024-02-16"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Loading libraries ---------------------------------
+library(tidyverse)
+library(gt)
+library(haven)
+library(sf)
+library(glue)
+library(modelsummary)
+library(fixest)
+library(fastDummies)
+library(ggplot2)
+
+
+
+# Loading data ---------------------------
+structural_change <- readRDS("ETD_230918.RDS")
+
+#structural_change |> colnames()
+
+# functions ----------------------------
+perform_division <- function(prefix, your_data) {
+  # Column names with "_VA_Q15" suffix
+  col_va <- paste0(prefix, "_VA_Q15")
+  # Column names with "_EMP" suffix
+  col_emp <- paste0(prefix, "_EMP")
+  # Perform division
+  if (col_va %in% colnames(your_data) & col_emp %in% colnames(your_data)) {
+    labor_product <- your_data[[col_va]] / your_data[[col_emp]]
+    return(labor_product)
+  }
+}
+
+
+# converting variables -----------------------
+structural_change_transform <- structural_change |>
+  filter((var == "VA_Q15" | var == "EMP") & country == "Bangladesh") |>
+  pivot_wider(names_from = var, values_from = c(Agriculture, Mining, 
+                                                Manufacturing, Utilities, Construction, 
+                                                Trade, Transport, Business, Finance, 
+                                                Realestate, Government, Other, Total, 
+                                                Warflag)) |>
+  mutate(across(ends_with("VA_Q15"), ~ (.x * 1000000 /80))) |>
+  mutate(across(ends_with("EMP"), ~ .x * 1000))
+
+```
+
+## Question 1
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
