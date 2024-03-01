@@ -388,7 +388,7 @@ ggplot(data = df, aes(x = year, y = emp_share, group = sector)) +
   geom_line(aes(color = sector)) +
   labs(title = "Employment share in Bangladesh")
 ```
-The decomposition within sectors further confirms that the bulk of productivity growth from the 1990s to 2005 occurred within the manufacturing sector, with the service sector contributing the least. In contrast, between 2005 and 2018, the service sector experienced the most significant productivity growth, with agriculture contributing only 14.12%. In contrast, the manufacturing sector 
+The decomposition within sectors further confirms that the bulk of productivity growth from the 1990s to 2005 occurred within the manufacturing sector, with the service sector contributing the least with 28% and 0.2% decline respectively. Whereas agriculture saw an increase of about 28% in productivity within sector. In contrast, between 2005 and 2018, the service sector experienced the most significant productivity growth, with agriculture contributing only 14.12%. In contrast, the manufacturing sector 
 contributed 17.82% and the service sector contributed 39.83%. This shows how
 the service sector contributed signficantly to productivity growth. Additionally, the graph reveals a sharp decline in the employment share within the agriculture sector from 2005 onwards, accompanied by a proportional increase in the service sector. Notably, while manufacturing does not dominate employment share, it still experiences growth between 2005 and 2018.
 
