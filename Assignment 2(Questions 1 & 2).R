@@ -18,10 +18,10 @@ lines(density_fit, col = "red", lwd = 2)
 #It would be misleading to only use Sample 1 as sample 1 focuses on the medium
 #and large sized enterprises and using those would skew the mean employment in
 #a firm to be much larger than it actually is. It would also not be representative
-#of true firm employment distribution in Ethiopia as Sample 1 makes up a considerable
+#of true firm employment distribution in Ethiopia as Sample 1 makes up only a small
 #portion of the number of firms, and on a macro scale, the true employment distribution
 #is skewed largely to the left, indicating more small-sized firms, and removing sample
-#1 would change this distribution drastically.
+#2 would change this distribution drastically.
 
 
 #Question 2
