@@ -75,7 +75,7 @@ As can be sine by the regression line, there is a positive correlation between
 firm age and frim employment. One can take from this that older firms are ones
 that survived market competition and thus were able to grow as they were the 
 most productive. It could also be that it takes many years to be able to grow the employment of your firm substantially.
-However, if you look at the outliers (here firms with employment greater than 1200), you can see that while there is a greater concentration of outliers at the older age mark, age is not a restriction of firms becoming very large. One explanation on the concentration of very large firms at the oldest age is that these could be the large state owned enterprises in Ehtiopia.
+However, if you look at the outliers (here firms with employment greater than 1200), you can see that while there is a greater concentration of outliers at the older age mark, age is not a restriction of firms becoming very large. One explanation on the concentration of very large firms at the oldest age is that these could be the large state owned enterprises (SOEs) in Ehtiopia.
 
 ```{r}
 outliers <- data[data$emp > 1200,]
