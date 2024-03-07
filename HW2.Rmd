@@ -22,7 +22,7 @@ library(ggalt)
 data <- read_dta("middle_01_all_clean.dta")
 ```
 
-##Question 1: -----
+## Question 1: -----
 
 ethiopiafirms <- middle_01_all_clean_1_
 summary(ethiopiafirms)
@@ -86,7 +86,7 @@ hist(lemp2, freq = FALSE,
 #1 would change this distribution drastically.
 
 
-##Question 2: ------
+## Question 2: ------
 
 #histogram of firm sales
 hist(ethiopiafirms$sales, breaks = 50, freq = FALSE, 
