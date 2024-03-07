@@ -1,6 +1,6 @@
-<<<<<<< HEAD
 ---
 title: "HW2 - Firm Size in Ethiopia"
+author: "Nikhilla B, Ezeriki Emetonjor, Alistair Pyle, Suman Padhi"
 output: pdf_document
 date: "2024-03-04"
 ---
@@ -19,6 +19,7 @@ library(fixest)
 library(fastDummies)
 library(ggplot2)
 library(ggalt)
+library(labelled)
 
 data <- read_dta("middle_01_all_clean.dta")
 
@@ -106,12 +107,31 @@ $$
 $$
 VMPK_{i} = \alpha \frac{y_{i}}{k_{i}}
 $$
+
+
 ## Question 4b: -----
 
 ```{r}
+# filtering out na values of vmpk from the get go
 data <-
   data |> 
-  mutate(vmpk = 0.3*(sales/fixedasset_end))
+  mutate(vmpk = 0.3*(sales/fixedasset_end)) |> 
+  filter(!is.na(vmpk))
+
+# calculating percentiles based on vmpk and filtering out those that
+# that are more than 5%
+data$quantile <- ecdf(data$vmpk)(data$vmpk)
+mean(data$quantile)
+#filtering out top 5%
+outlier_2 <- data |>
+  filter(quantile < 0.95) |>
+  mutate(log_vmpk = log(vmpk))
+
+# this is not consistent with numbers calculated below, check with Nikhilla
+mean(log(outlier_2$vmpk))
+sd(log(outlier_2$vmpk))
+max(outlier_2$vmpk)
+min(outlier_2$vmpk)
 
 outlier <-
   data |> 
@@ -119,9 +139,12 @@ outlier <-
   filter(row_number() <= n() * 0.95) |> 
   mutate(log_vmpk = log(vmpk))
 
+max(outlier$vmpk)
+min(outlier$vmpk)
+
 summ <-
   outlier |> 
-  summarise(mean = mean(log_vmpk),
+  summarise(mean_vmpk = mean(log_vmpk),
             sd = sd(log_vmpk))
 
 #cross check values of mean and sd
@@ -133,7 +156,7 @@ After removing outliers, the mean and standard of log(vmpk) in birr are -0.021 a
 ## Question 4c: -----
 
 ```{r}
-ggplot(outlier, aes(x= emp, y= log_vmpk)) +
+ggplot(outlier_2, aes(x= emp, y= log_vmpk)) +
     geom_point() +
     geom_smooth(method=lm, se=FALSE)
 
@@ -147,153 +170,57 @@ Based on the scatter plot, we can observe that small scale firms that have very 
 Using the production function above and based on this relationship, we can comment that the productivity in larger firms tend to be lower. This is because as the increase in sales is not proportional to increase in capital and points to the lower contribution of labor. 
 
 
-=======
----
-title: "HW2 - Firm Size in Ethiopia"
-output: pdf_document
-date: "2024-03-04"
----
+## Question 4d: -----
+What the results show us is that companies that reported a major problem of working capital shortage had higher vmpk??????????? that makes no sense
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-# Loading libraries ---------------------------------
-library(tidyverse)
-library(gt)
-library(haven)
-library(sf)
-library(glue)
-library(modelsummary)
-library(fixest)
-library(fastDummies)
-library(ggplot2)
-library(ggalt)
-
-data <- read_dta("middle_01_all_clean.dta")
-
-size <-
-  data |> 
-  group_by(sample) |> 
-  count()
-
-```
-
-##Question 1: -----
-
-
+SO I guess it means the more productive firms are capital constrained
 ```{r}
-#Histogram of firm employment
-hist(data$emp, breaks = 1000, freq = FALSE, xlim = c(0,100), 
-     main = "Distribution of Firm Employment in Ethiopia (Small & Medium Enterprises)",
-     xlab = "Number of employees",
-     ylab = "Share of Plants")  
+#The variables “prob_major1”, “prob_major2”, “prob_major3” report the three major problems faced by firms. Construct a variable that is equal to one if a firm reports “working capital shortage” (the code is 5) as any of the responses to these three variables; otherwise, it takes a value of zero. Run a regression that compares the log(VMPK) between firms that report working capital shortages and those that do not, while controlling for firm size. Provide an interpretation of the finding.
 
-# Fitting a density function to the data
-density_fit <- density(data$emp) #what is this for
 
-# Adding the line of best fit
-lines(density_fit, col = "red", lwd = 2) #why is this code not working 
+# update code to use df that filters out top 5%
+capital_analysis <- outlier_2 |>
+  mutate(capital_short = ifelse(prob_major1 == 5 | prob_major2 == 5 | prob_major3 == 5, 1, 0))
+
+# running regressions
+capital_lm <- lm(log_vmpk ~ capital_short + emp, data = capital_analysis)
+
+# results
+rename_map <- list(
+  'capital_short' = 'Working Capital Shortage',
+  'emp' = 'Employment')
+
+modelsummary(capital_lm,
+             gof_map = "nobs",
+             coef_map = rename_map)
+
+
 ```
 
-It would be misleading to only use Sample 1 as sample 1 focuses on the medium
-and large sized enterprises and using those would skew the mean employment in
-a firm to be much larger than it actually is. It would also not be representative
-of true firm employment distribution in Ethiopia as Sample 2 makes up a considerable portion of the number of firms, and on a macro scale, the true employment distribution is skewed largely to the left, indicating more small-sized firms, and removing sample 1 would change this distribution drastically.
-
-##Question 2: ------
-
+## Question 4d: -----
 ```{r}
-#histogram of firm sales
-hist(data$sales, breaks = 50, freq = FALSE, 
-     main = "Distribution of Sales in Ethiopia (Small & Medium Enterprises)",
-     xlab = "Number of sales",
-     ylab = "Share of Plants",)
+#Within Sample 2, there is a variable called “reason_not_solve_cap_prob” which takes on 6 possible values for why firms may be unable to solve their working capital problems. It’s only been answered by 167 firms, but let’s take the answers at face value and assume firms are telling the truth. Re-do the analysis in (d) comparing the log(VMPK) of firms controlling for firm size and the different responses to this question. What message emerges from the regression? (Hint, if you write “i.reason_not_solve_cap_prob”, Stata will automatically create the dummy variables for you and drop one (“insufficient loan”).
 
-# Fitting a density function to the data
-density_fit2 <- density(data$sales, na.rm = TRUE)
+# getting the string representation of the reasons
+capital_analysis$reason_not_solve_cap_string <- to_factor(capital_analysis$reason_not_solve_cap_prob)
 
-# Adding the line of best fit
-lines(density_fit2, col = "blue", lwd = 2)
-```
+# regression 2
+# insufficient loan is also the reference
+capital_notsolve_lm <- lm(log_vmpk ~ as.factor(reason_not_solve_cap_string) + emp, data = capital_analysis)
 
+# renaming covariates
+rename_map2 <- list(
+  'as.factor(reason_not_solve_cap_string)High collateral requirment' = 'High collateral requirment',
+  'as.factor(reason_not_solve_cap_string)High interest rate' = 'High interest rate',
+  'as.factor(reason_not_solve_cap_string)Short period of loan repayment' = 'Short period of loan repayment',
+  'as.factor(reason_not_solve_cap_string)Inefficiency of financial institutions' = 'Inefficiency of financial institutions',
+  'as.factor(reason_not_solve_cap_string)Others' = 'Others',
+  'emp' = 'Employment')
 
-Some of the possible reasons for the differences include: industry and sector
-differences, where some small firms may be specialized in certain industries 
-and may have achieved economies of scale, allowing them to produce a very high
-number of sales with fewer employees. Furthermore, it's important to consider
-the type of output produced by large and medium firms, which may have a lower
-market price if it's mass produced compared to small firms, therefore, requiring
-more sales to break even. 
-
-## Question 3: ------
-
-As can be seen by the regression line, there is a positive correlation between 
-firm age and frim employment. One can take from this that older firms are ones
-that survived market competition and thus were able to grow as they were the 
-most productive. It could also be that it takes many years to be able to grow the employment of your firm substantially.
-However, if you look at the outliers (here firms with employment greater than 1200), you can see that while there is a greater concentration of outliers at the older age mark, age is not a restriction of firms becoming very large. One explanation on the concentration of very large firms at the oldest age is that these could be the large state owned enterprises (SOEs) in Ehtiopia.
-
-```{r}
-outliers <- data[data$emp > 1200,]
-ggplot(data = data, aes(x = age, y = emp)) +
-  geom_count(col= "tomato3", show.legend = F) +
-  geom_smooth(method = "lm", se = FALSE) +  # Add a linear regression line
-  labs(title = "Relationship Between Firm Employment and Age", x = "Firm Age", y = "Firm Employment") +
-  geom_encircle(aes(x = age, y = emp),
-                data = outliers,
-                color = "cadetblue")
-```
-
-## Question 4a: -----
-
-$$
-y_{i} = A_{i}k_{i}^{\alpha}l_{i}^{1-\alpha}
-$$
-$$
-VMPK_{i} = \alpha A_{i}k_{i}^{\alpha-1}l_{i}^{1-\alpha}
-$$
-$$
-VMPK_{i} = \alpha \frac{y_{i}}{k_{i}}
-$$
-## Question 4b: -----
-
-```{r}
-data <-
-  data |> 
-  mutate(vmpk = 0.3*(sales/fixedasset_end))
-
-outlier <-
-  data |> 
-  filter(!is.na(vmpk)) |> 
-  filter(row_number() <= n() * 0.95) |> 
-  mutate(log_vmpk = log(vmpk))
-
-summ <-
-  outlier |> 
-  summarise(mean = mean(log_vmpk),
-            sd = sd(log_vmpk))
-
-#cross check values of mean and sd
+# results
+modelsummary(capital_notsolve_lm,
+             gof_map = "nobs",
+             coef_map = rename_map2)
 
 ```
 
-After removing outliers, the mean and standard of log(vmpk) in birr are -0.021 and 1.70 respectively.
-
-## Question 4c: -----
-
-```{r}
-ggplot(outlier, aes(x= emp, y= log_vmpk)) +
-    geom_point() +
-    geom_smooth(method=lm, se=FALSE)
-
-#bin scatter and should we cut at 100 employees?
-#revisit interpretation
-
-```
-
-Based on the scatter plot, we can observe that small scale firms that have very few employees, tend to have a very noisy relationship with value of marginal product of capital. As firm sizes increase their value of marginal product of capital tends to stabilize around the regression line. The graph also indicates a negative relationship between the two. In the large firms, the value of marginal product of labor tends to be lower probably due to capital crunch. 
-
-Using the production function above and based on this relationship, we can comment that the productivity in larger firms tend to be lower. This is because as the increase in sales is not proportional to increase in capital and points to the lower contribution of labor. 
-
-
->>>>>>> ad3b848bc3a794067a12499eb7713a37637eef05
