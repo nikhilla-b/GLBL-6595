@@ -78,7 +78,7 @@ if (!is.numeric(sector_labor_product)) {
 }
 
 # Perform subtraction
-sector_standardized <- sector_labor_product - 3068.131
+sector_standardized <- sector_labor_product / 3068.131
 
 # naming the standardized values
 names(sector_standardized) <- sectors
