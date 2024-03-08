@@ -75,7 +75,7 @@ and may have achieved economies of scale, allowing them to produce a very high
 number of sales with fewer employees. Furthermore, it's important to consider
 the type of output produced by large and medium firms, which may have a lower
 market price if it's mass produced compared to small firms, therefore, requiring
-more sales to break even. Lastly, the absolute value of small firms present in Ethiopia, making up a large share of employment, measn that their sales would generate a large portion of sales.
+more sales to break even. Lastly, the absolute value of small firms present in Ethiopia, making up a large share of employment, means that their sales would generate a large portion of sales.
 
 ## Question 3: ------
 
@@ -165,13 +165,13 @@ ggplot(outlier_2, aes(x= emp, y= log_vmpk)) +
 
 ```
 
-Based on the scatter plot, we can observe that small scale firms that have very few employees, tend to have a very noisy relationship with value of marginal product of capital. As firm sizes increase their value of marginal product of capital tends to stabilize around the regression line. The graph also indicates a negative relationship between the two. In the large firms, the value of marginal product of labor tends to be lower probably due to capital crunch. 
+Based on the scatter plot, we can observe that small scale firms that have very few employees, tend to have a very noisy relationship with value of marginal product of capital. As firm sizes increase their value of marginal product of capital tends to stabilize around the regression line. The graph also indicates a negative relationship between the two. In the large firms, the value of marginal product of labor tends to be lower probably due to capital crunch for smaller firms. 
 
-Using the production function above and based on this relationship, we can comment that the productivity in larger firms tend to be lower. This is because the increase in sales is not proportional to increase in capital and points to the lower contribution of labor. 
+Using the production function above and based on this relationship, we can comment that the marginal product of capital in larger firms tend to be lower. This is because the increase in sales is not proportional to increase in capital and points to the lower contribution of labor. 
 
 
 ## Question 4d: -----
-The results show us that firms that experienced working capital shortage had, on average, 28.3% higher VMPK than firms that did not experience such shortage. Therefore this implies that the more productive firms are actually more capital constrained.
+The results show us that firms that experienced working capital shortage had, on average, 28.3% higher VMPK than firms that did not experience such shortage. This does make sense: we have seen that smaller firms have higher values of VMPK and so this higher VMPK could be because they lack access to sufficient capitql and experience capital crunches.So, possibly if smaller firms had better access to capital they could grow more and add more capital (which would decrease their VMPK).
 ```{r}
 #The variables “prob_major1”, “prob_major2”, “prob_major3” report the three major problems faced by firms. Construct a variable that is equal to one if a firm reports “working capital shortage” (the code is 5) as any of the responses to these three variables; otherwise, it takes a value of zero. Run a regression that compares the log(VMPK) between firms that report working capital shortages and those that do not, while controlling for firm size. Provide an interpretation of the finding.
 
@@ -198,7 +198,10 @@ modelsummary(models,
 ```
 
 ## Question 4e: -----
-From the results below, it seems that High Interest rate as a singular category has the strongest negative relationship with VMPK, in which a firm that has not solved its capital problem due to high interest rates sees about 157% less VMPK as compared to firms that cited insufficient loans as their reason. On the other hand, it seems that short loan of repayment actually has a positive relationship with VMPK, as firms that cited that reason actually see about 52.9% higher VMPK. This could be due to the fact that a short time frame for repaying loans might put more pressure on a firm to deliver and actually might improve their returns, at least in comparison to firms that cite insufficient loans.
+From the results below, it seems that High Interest rate as a singular category has the strongest negative relationship with VMPK, in which a firm that has not solved its capital problem due to high interest rates sees about 157% less VMPK as compared to firms that cited insufficient loans as their reason. 
+#This result really doesn't make sense to me, I would expect the opposite relationship?
+
+On the other hand, it seems that short loan of repayment actually has a positive relationship with VMPK, as firms that cited that reason actually see about 52.9% higher VMPK. This could be explained by the fact that having a shorter time to repay loans discourages firms from seeking capital, meaning they do not add capital into their firms, keeping VMPK higher.
 ```{r}
 #Within Sample 2, there is a variable called “reason_not_solve_cap_prob” which takes on 6 possible values for why firms may be unable to solve their working capital problems. It’s only been answered by 167 firms, but let’s take the answers at face value and assume firms are telling the truth. Re-do the analysis in (d) comparing the log(VMPK) of firms controlling for firm size and the different responses to this question. What message emerges from the regression? (Hint, if you write “i.reason_not_solve_cap_prob”, Stata will automatically create the dummy variables for you and drop one (“insufficient loan”).
 
