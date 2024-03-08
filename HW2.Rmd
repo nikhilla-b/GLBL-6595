@@ -171,9 +171,7 @@ Using the production function above and based on this relationship, we can comme
 
 
 ## Question 4d: -----
-What the results show us is that companies that reported a major problem of working capital shortage had higher vmpk??????????? that makes no sense
-
-SO I guess it means the more productive firms are capital constrained
+The results show us that firms that experienced working capital shortage had, on average, 28.3% higher VMPK than firms that did not experience such shortage. Therefore this implies that the more productive firms are actually more capital constrained.
 ```{r}
 #The variables “prob_major1”, “prob_major2”, “prob_major3” report the three major problems faced by firms. Construct a variable that is equal to one if a firm reports “working capital shortage” (the code is 5) as any of the responses to these three variables; otherwise, it takes a value of zero. Run a regression that compares the log(VMPK) between firms that report working capital shortages and those that do not, while controlling for firm size. Provide an interpretation of the finding.
 
@@ -190,7 +188,9 @@ rename_map <- list(
   'capital_short' = 'Working Capital Shortage',
   'emp' = 'Employment')
 
-modelsummary(capital_lm,
+models <- list("Log of VMPK" = capital_lm)
+
+modelsummary(models,
              gof_map = "nobs",
              coef_map = rename_map)
 
@@ -198,6 +198,7 @@ modelsummary(capital_lm,
 ```
 
 ## Question 4d: -----
+From the results below, it seems that High Interest rate as a singular category has the strongest negative relationship with VMPK, in which a firm that has not solved its capital problem due to high interest rates sees about 157% less VMPK as compared to firms that cited insufficient loans as their reason. On the other hand, it seems that short loan of repayment actually has a positive relationship with VMPK, as firms that cited that reason actually see about 52.9% higher VMPK. This could be due to the fact that a short time frame for repaying loans might put more pressure on a firm to deliver and actually might improve their returns, at least in comparison to firms that cite insufficient loans.
 ```{r}
 #Within Sample 2, there is a variable called “reason_not_solve_cap_prob” which takes on 6 possible values for why firms may be unable to solve their working capital problems. It’s only been answered by 167 firms, but let’s take the answers at face value and assume firms are telling the truth. Re-do the analysis in (d) comparing the log(VMPK) of firms controlling for firm size and the different responses to this question. What message emerges from the regression? (Hint, if you write “i.reason_not_solve_cap_prob”, Stata will automatically create the dummy variables for you and drop one (“insufficient loan”).
 
@@ -217,10 +218,13 @@ rename_map2 <- list(
   'as.factor(reason_not_solve_cap_string)Others' = 'Others',
   'emp' = 'Employment')
 
+models <- list("Log of VMPK" = capital_notsolve_lm)
+
 # results
-modelsummary(capital_notsolve_lm,
+modelsummary(models,
              gof_map = "nobs",
-             coef_map = rename_map2)
+             coef_map = rename_map2,
+             )
 
 ```
 
