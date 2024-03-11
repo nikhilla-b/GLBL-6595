@@ -87,18 +87,9 @@ most productive. It could also be that it takes many years to be able to grow th
 However, if you look at the outliers (here firms with employment greater than 1200), you can see that while there is a greater concentration of outliers at the older age mark, age is not a restriction of firms becoming very large. One explanation on the concentration of very large firms at the oldest age is that these could be the large state owned enterprises (SOEs) in Ehtiopia.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-#outliers <- data[data$emp > 1200,]
-#ggplot(data = data, aes(x = age, y = emp)) +
- # geom_count(col= "tomato3", show.legend = F) +
-#  geom_smooth(method = "lm", se = FALSE) +  # Add a linear #regression line
- # labs(title = "Relationship Between Firm Employment and Age", x #= "Firm Age", y = "Firm Employment") +
- # geom_encircle(aes(x = age, y = emp),
-  #              data = outliers,
-   #             color = "cadetblue")
-
-
 #alternative code
-binsreg(data$emp, data$age, line = c(1,1))
+graph <- binsreg(data$emp, data$age, line = c(1,1))
+graph
 ```
 
 ## Question 4a: -----
@@ -192,7 +183,7 @@ modelsummary(models,
 ```
 
 ## Question 4e: -----
-From the results above, it seems that High Interest rate as a singular category has the strongest negative relationship with VMPK, in which a firm that has not solved its capital problem due to high interest rates sees about 157% less VMPK as compared to firms that cited insufficient loans as their reason. 
+From the results above, it seems that High Interest rate as a singular category has the strongest negative relationship with VMPK, in which a firm that has not solved its capital problem due to high interest rates sees about 161% less VMPK as compared to firms that cited insufficient loans as their reason. 
 
 On the other hand, it seems that short loan of repayment actually has a positive relationship with VMPK, as firms that cited that reason actually see about 52.9% higher VMPK. This could be explained by the fact that having a shorter time to repay loans discourages firms from seeking capital, meaning they do not add capital into their firms, keeping VMPK higher.
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -203,7 +194,7 @@ capital_analysis$reason_not_solve_cap_string <- to_factor(capital_analysis$reaso
 
 # regression 2
 # insufficient loan is also the reference
-capital_notsolve_lm <- lm(log_vmpk ~ as.factor(reason_not_solve_cap_string) + emp, data = capital_analysis)
+capital_notsolve_lm <- lm(log_vmpk ~ as.factor(reason_not_solve_cap_string) + emp + capital_short, data = capital_analysis)
 
 # renaming covariates
 rename_map2 <- list(
@@ -212,6 +203,7 @@ rename_map2 <- list(
   'as.factor(reason_not_solve_cap_string)Short period of loan repayment' = 'Short period of loan repayment',
   'as.factor(reason_not_solve_cap_string)Inefficiency of financial institutions' = 'Inefficiency of financial institutions',
   'as.factor(reason_not_solve_cap_string)Others' = 'Others',
+  'capital_short' = 'Working Capital Shortage',
   'emp' = 'Employment')
 
 models <- list("Log of VMPK" = capital_notsolve_lm)
